@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order — BoostKart</title>
+    <meta name="description"
+        content="Order social media growth services. Pay via UPI and submit your order. Fast, secure, manual delivery.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">⚡</span><span class="logo-text">BoostKart</span>
+            </a>
+            <div class="nav-links">
+                <a href="services.html">Services</a>
+                <a href="order.html" style="color:#fff">Order</a>
+                <a href="rules.html">Rules</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+            <a href="services.html" class="btn-nav">View Services</a>
+            <button class="hamburger" id="ham"><span></span><span></span><span></span></button>
+        </div>
+        <div class="nav-mobile" id="navMob">
+            <a href="services.html">Services</a>
+            <a href="order.html">Order</a>
+            <a href="rules.html">Rules</a>
+            <a href="index.html#contact">Contact</a>
+        </div>
+    </nav>
+
+    <div class="order-page container">
+        <div class="section-head" style="max-width:600px">
+            <p class="section-label">PLACE ORDER</p>
+            <h1
+                style="font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:0.5rem;">
+                Ready to Grow?</h1>
+            <p style="color:var(--text2);font-size:0.9rem">Choose how you want to place your order. Both methods are
+                fast and secure.</p>
+        </div>
+
+        <!-- TABS -->
+        <div class="order-tabs">
+            <button class="order-tab active" id="tabForm" onclick="switchOrderTab('form')">
+                📋 Order via Website Form
+            </button>
+            <button class="order-tab" id="tabTg" onclick="switchOrderTab('telegram')">
+                💬 Order via Telegram DM
+            </button>
+        </div>
+
+        <!-- ===== FLOW A: WEBSITE FORM ===== -->
+        <div class="order-panel active" id="panelForm">
+            <div class="order-layout">
+                <!-- FORM -->
+                <div class="form-card" id="orderFormCard">
+                    <h2>📋 Website Order Form</h2>
+                    <p>Fill in the details below, upload your payment screenshot, and submit. We'll confirm within 1
+                        hour.</p>
+
+                    <div id="successScreen" class="success-screen">
+                        <div class="success-icon">🎉</div>
+                        <h2>Order Submitted!</h2>
+                        <p>Your order has been received. We'll verify your payment and start delivery within 1 hour.
+                            Check Telegram for updates.</p>
+                        <a href="services.html" class="btn-primary" style="margin-top:0.5rem">Browse More Services</a>
+                    </div>
+
+                    <form id="orderForm">
+                        <div class="form-group">
+                            <label for="serviceSelect">Select Service *</label>
+                            <select id="serviceSelect" required>
+                                <option value="">— Choose a service —</option>
+                            </select>
+                        </div>
+
+                        <div id="serviceInfo"
+                            style="display:none;background:rgba(124,58,237,0.07);border:1px solid rgba(124,58,237,0.2);border-radius:10px;padding:14px;margin-bottom:1.25rem;font-size:0.82rem">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+                                <strong id="infoName"></strong>
+                                <strong id="infoPrice" style="color:var(--accent2)"></strong>
+                            </div>
+                            <div style="color:var(--text2)" id="infoDelivery"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username">Your Username / Profile Link *</label>
+                            <input type="text" id="username"
+                                placeholder="e.g. @yourhandle or https://instagram.com/yourhandle" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="postUrl">Post / Video URL (if applicable)</label>
+                            <input type="text" id="postUrl" placeholder="Required for likes, comments, views">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerName">Your Name *</label>
+                            <input type="text" id="customerName" placeholder="Full name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerPhone">WhatsApp / Telegram Number</label>
+                            <input type="tel" id="customerPhone" placeholder="+91 9876543210">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="paymentRef">UPI Transaction Reference / UTR Number *</label>
+                            <input type="text" id="paymentRef" placeholder="e.g. 123456789012" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Payment Screenshot *</label>
+                            <div class="upload-area" id="uploadArea" onclick="triggerUpload()">
+                                <div class="upload-icon">📸</div>
+                                <h4>Click to upload screenshot</h4>
+                                <p>or drag and drop here<br>JPG, PNG — Max 5MB</p>
+                                <input type="file" id="screenshotInput" accept="image/*"
+                                    onchange="handleFileSelect(event)">
+                                <img id="uploadPreview" class="upload-preview" alt="Payment screenshot">
+                            </div>
+                            <div id="fileName" style="font-size:0.75rem;color:var(--text3);margin-top:6px"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Additional Notes</label>
+                            <textarea id="notes" placeholder="Any special instructions (optional)"></textarea>
+                        </div>
+
+                        <label
+                            style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--text2);margin-bottom:1.25rem">
+                            <input type="checkbox" id="agreeTerms"
+                                style="margin-top:3px;accent-color:var(--accent);width:15px;height:15px">
+                            I have read the <a href="rules.html" style="color:var(--accent2)">&nbsp;Rules &
+                                Terms&nbsp;</a> and agree that payment is non-refundable after service delivery.
+                        </label>
+
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            ⚡ Submit Order
+                        </button>
+                    </form>
+                </div>
+
+                <!-- UPI PANEL -->
+                <div class="upi-card">
+                    <h3>💳 Payment Details</h3>
+
+                    <div class="upi-id-box">
+                        <div>
+                            <div style="font-size:0.7rem;color:var(--text3);margin-bottom:3px">UPI ID</div>
+                            <div class="upi-id-val" id="upiDisplay">shubhamagre@fam</div>
+                        </div>
+                        <button class="copy-btn" onclick="copyUPI()">📋 Copy</button>
+                    </div>
+
+                    <!-- QR placeholder — replace src with actual QR img -->
+                    <div class="qr-placeholder">
+                        <div class="qr-icon">📱</div>
+                        <p>Scan QR Code<br>to Pay</p>
+                        <p style="font-size:0.7rem;margin-top:4px">Add your QR code image here</p>
+                    </div>
+
+                    <div class="upi-steps">
+                        <div class="upi-step">
+                            <div class="upi-step-num">1</div>
+                            <p>Open any UPI app (PhonePe, GPay, Paytm, etc.)</p>
+                        </div>
+                        <div class="upi-step">
+                            <div class="upi-step-num">2</div>
+                            <p>Send exact amount to the UPI ID above</p>
+                        </div>
+                        <div class="upi-step">
+                            <div class="upi-step-num">3</div>
+                            <p>Take a screenshot of the success confirmation</p>
+                        </div>
+                        <div class="upi-step">
+                            <div class="upi-step-num">4</div>
+                            <p>Upload screenshot in the form and submit order</p>
+                        </div>
+                    </div>
+
+                    <div class="upi-warning">
+                        ⚠️ <strong>Important:</strong> Orders are only processed after manual payment verification. Do
+                        not share your UPI PIN with anyone.
+                    </div>
+
+                    <div
+                        style="margin-top:1rem;padding:12px;background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.15);border-radius:10px;font-size:0.8rem;color:#4ade80">
+                        ✅ Once verified, we begin delivery immediately.<br>
+                        🕐 Typical verification time: within 1 hour.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FLOW B: TELEGRAM ===== -->
+        <div class="order-panel" id="panelTelegram">
+            <div class="tg-panel">
+                <div class="tg-service-select">
+                    <h3>1. Select your service</h3>
+                    <div class="form-group" style="margin-bottom:0.75rem">
+                        <select id="tgServiceSelect" onchange="updateTgPreview()">
+                            <option value="">— Choose a service —</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <label for="tgUsername">Your username / profile link</label>
+                        <input type="text" id="tgUsername" placeholder="e.g. @yourhandle" oninput="updateTgPreview()">
+                    </div>
+                </div>
+
+                <div class="tg-message-preview">
+                    <h4>✉️ Message Preview (auto-sent to Telegram)</h4>
+                    <pre class="tg-msg-box" id="tgPreview">Select a service above to see your message preview...</pre>
+                </div>
+
+                <div
+                    style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem">
+                    <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:0.75rem">2. Payment Instructions</h4>
+                    <p style="font-size:0.83rem;color:var(--text2);line-height:1.7">
+                        UPI ID: <strong id="tgUpiDisplay" style="color:var(--accent2)">shubhamagre@fam</strong>
+                        <br>Make payment first, then send the message with your screenshot on Telegram.
+                    </p>
+                </div>
+
+                <button class="tg-open-btn" id="tgOpenBtn" onclick="openTelegram()">
+                    <span style="font-size:1.2rem">💬</span>
+                    Open Telegram & Send Message
+                </button>
+
+                <p style="text-align:center;font-size:0.78rem;color:var(--text3);margin-top:1rem">
+                    Telegram will open with your message pre-filled. Just attach your payment screenshot and send!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast" style="display:none"></div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div class="footer-brand">
+                <div class="logo"><span class="logo-icon">⚡</span><span class="logo-text">BoostKart</span></div>
+                <p>Real digital growth services. Manual delivery. Honest pricing.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="services.html">All Services</a>
+                <a href="rules.html">Rules & Terms</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 BoostKart. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Populate service dropdowns
+        function populateSelects() {
+            const services = getActiveServices();
+            const options = `<option value="">— Choose a service —</option>` +
+                services.map(s => `<option value="${s.id}">${s.platform} — ${s.name} (₹${s.price})</option>`).join('');
+            document.getElementById('serviceSelect').innerHTML = options;
+            document.getElementById('tgServiceSelect').innerHTML = options;
+            // Set UPI
+            document.getElementById('upiDisplay').textContent = SITE_CONFIG.upiId;
+            document.getElementById('tgUpiDisplay').textContent = SITE_CONFIG.upiId;
+        }
+
+        // Show service info on select
+        document.getElementById('serviceSelect').addEventListener('change', function () {
+            const s = getServiceById(this.value);
+            const box = document.getElementById('serviceInfo');
+            if (s) {
+                document.getElementById('infoName').textContent = s.platform + ' — ' + s.name;
+                document.getElementById('infoPrice').textContent = '₹' + s.price;
+                document.getElementById('infoDelivery').textContent = '⏰ Delivery: ' + s.delivery;
+                box.style.display = 'block';
+            } else { box.style.display = 'none'; }
+        });
+
+        // Telegram preview
+        function updateTgPreview() {
+            const sid = document.getElementById('tgServiceSelect').value;
+            const uname = document.getElementById('tgUsername').value;
+            const s = getServiceById(sid);
+            if (!s) {
+                document.getElementById('tgPreview').textContent = 'Select a service above to see your message preview...';
+                return;
+            }
+            document.getElementById('tgPreview').textContent =
+                `Hello! I want to place an order:\n\n📦 Service: ${s.platform} — ${s.name}\n💰 Price: ₹${s.price}\n👤 Username/Link: ${uname || '[ENTER YOUR USERNAME]'}\n⏰ Delivery: ${s.delivery}\n\nUPI ID: ${SITE_CONFIG.upiId}\n\nI will send the payment screenshot. Please confirm after verification.`;
+        }
+
+        function openTelegram() {
+            const sid = document.getElementById('tgServiceSelect').value;
+            const uname = document.getElementById('tgUsername').value;
+            if (!sid) { showToast('Please select a service first.', 'error'); return; }
+            const s = getServiceById(sid);
+            window.open(buildTelegramMessage(s, uname), '_blank');
+        }
+
+        // Upload
+        window.triggerUpload = function () { document.getElementById('screenshotInput').click(); };
+        window.handleFileSelect = function (e) {
+            const file = e.target.files[0]; if (!file) return;
+            const prev = document.getElementById('uploadPreview');
+            const name = document.getElementById('fileName');
+            const reader = new FileReader();
+            reader.onload = (ev) => { prev.src = ev.target.result; prev.style.display = 'block'; };
+            reader.readAsDataURL(file);
+            name.textContent = '📎 ' + file.name;
+        };
+
+        // Drag & drop
+        const ua = document.getElementById('uploadArea');
+        ua.addEventListener('dragover', e => { e.preventDefault(); ua.classList.add('drag-over'); });
+        ua.addEventListener('dragleave', () => ua.classList.remove('drag-over'));
+        ua.addEventListener('drop', e => {
+            e.preventDefault(); ua.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const dt = new DataTransfer(); dt.items.add(file);
+                document.getElementById('screenshotInput').files = dt.files;
+                const ev = new Event('change'); document.getElementById('screenshotInput').dispatchEvent(ev);
+            }
+        });
+
+        // Order form submit
+        document.getElementById('orderForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const sid = document.getElementById('serviceSelect').value;
+            const username = document.getElementById('username').value;
+            const name = document.getElementById('customerName').value;
+            const ref = document.getElementById('paymentRef').value;
+            const agreed = document.getElementById('agreeTerms').checked;
+            const file = document.getElementById('screenshotInput').files[0];
+
+            if (!sid) { showToast('Please select a service.', 'error'); return; }
+            if (!username) { showToast('Please enter your username.', 'error'); return; }
+            if (!ref) { showToast('Please enter your UTR/transaction number.', 'error'); return; }
+            if (!file) { showToast('Please upload your payment screenshot.', 'error'); return; }
+            if (!agreed) { showToast('Please agree to the rules & terms.', 'error'); return; }
+
+            // Simulate save to localStorage (demo — in production, this POST to your API)
+            const s = getServiceById(sid);
+            const order = {
+                id: 'BK' + Date.now(),
+                service: s ? (s.platform + ' — ' + s.name) : sid,
+                price: s ? s.price : 0,
+                username, name, ref,
+                notes: document.getElementById('notes').value,
+                phone: document.getElementById('customerPhone').value,
+                postUrl: document.getElementById('postUrl').value,
+                status: 'pending',
+                createdAt: new Date().toLocaleString('en-IN'),
+            };
+            const orders = JSON.parse(localStorage.getItem('bk_orders') || '[]');
+            orders.push(order);
+            localStorage.setItem('bk_orders', JSON.stringify(orders));
+
+            // Show success
+            document.getElementById('orderForm').style.display = 'none';
+            document.getElementById('successScreen').classList.add('visible');
+            showToast('✅ Order submitted successfully!', 'success');
+        });
+
+        // Tab switch
+        window.switchOrderTab = function (tab) {
+            document.getElementById('tabForm').classList.toggle('active', tab === 'form');
+            document.getElementById('tabTg').classList.toggle('active', tab === 'telegram');
+            document.getElementById('panelForm').classList.toggle('active', tab === 'form');
+            document.getElementById('panelTelegram').classList.toggle('active', tab === 'telegram');
+        };
+
+        // Check if pre-selected service from URL
+        function checkPreSelect() {
+            const params = new URLSearchParams(location.search);
+            const sid = params.get('service');
+            if (sid) {
+                const el = document.getElementById('serviceSelect');
+                el.value = sid; el.dispatchEvent(new Event('change'));
+                document.getElementById('tgServiceSelect').value = sid;
+                updateTgPreview();
+                const tab = params.get('tab');
+                if (tab === 'telegram') switchOrderTab('telegram');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { populateSelects(); checkPreSelect(); });
+    </script>
+</body>
+
+</html>

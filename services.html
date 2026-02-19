@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services & Pricing — BoostKart</title>
+    <meta name="description"
+        content="Browse all social media growth services and transparent pricing. Instagram, TikTok, YouTube, and custom packages.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">BoostKart</span>
+            </a>
+            <div class="nav-links">
+                <a href="services.html" style="color:#fff">Services</a>
+                <a href="order.html">Order</a>
+                <a href="rules.html">Rules</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+            <a href="order.html" class="btn-nav">Order Now</a>
+            <button class="hamburger" id="ham"><span></span><span></span><span></span></button>
+        </div>
+        <div class="nav-mobile" id="navMob">
+            <a href="services.html">Services</a>
+            <a href="order.html">Order</a>
+            <a href="rules.html">Rules</a>
+            <a href="index.html#contact">Contact</a>
+            <a href="order.html" class="btn-nav" style="display:block;text-align:center;margin-top:8px;">Order Now</a>
+        </div>
+    </nav>
+
+    <div class="page-hero">
+        <div class="container">
+            <p class="section-label">SERVICES & PRICING</p>
+            <h1>All Packages</h1>
+            <p>Real growth, honest prices. Pick your package and order in minutes.</p>
+        </div>
+    </div>
+
+    <div class="container" style="padding-bottom:80px;">
+        <div
+            style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
+            <div class="filter-tabs" id="filterTabs">
+                <button class="filter-tab active" data-filter="all">All Services</button>
+                <button class="filter-tab" data-filter="instagram">📸 Instagram</button>
+                <button class="filter-tab" data-filter="tiktok">🎵 TikTok</button>
+                <button class="filter-tab" data-filter="youtube">▶️ YouTube</button>
+                <button class="filter-tab" data-filter="custom">🎯 Custom Packages</button>
+            </div>
+            <div style="font-size:0.82rem;color:var(--text3)" id="servicesCount"></div>
+        </div>
+
+        <div class="services-full-grid" id="servicesGrid"></div>
+
+        <div
+            style="margin-top:3rem;padding:2rem;background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.2);border-radius:var(--radius);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+            <div>
+                <strong style="font-size:1rem;">Need a custom package?</strong>
+                <p style="color:var(--text2);font-size:0.85rem;margin-top:4px;">Message us on Telegram for bulk orders
+                    or custom requirements.</p>
+            </div>
+            <a href="https://t.me/Shubham_656" target="_blank" class="btn-primary">💬 Chat on Telegram</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div class="footer-brand">
+                <div class="logo"><span class="logo-icon">⚡</span><span class="logo-text">BoostKart</span></div>
+                <p>Real digital growth services. Manual delivery. Honest pricing.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Pages</h4>
+                <a href="index.html">Home</a>
+                <a href="services.html">Services</a>
+                <a href="order.html">Place Order</a>
+                <a href="rules.html">Rules & Terms</a>
+            </div>
+            <div class="footer-links">
+                <h4>Connect</h4>
+                <a href="https://t.me/Shubham_656" target="_blank">Telegram</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 BoostKart. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast" style="display:none"></div>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Filter logic
+        let currentFilter = 'all';
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                currentFilter = tab.dataset.filter;
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                renderServicesGrid();
+            });
+        });
+
+        function renderServicesGrid() {
+            const grid = document.getElementById('servicesGrid');
+            const count = document.getElementById('servicesCount');
+            const f = currentFilter === 'all' ? null : currentFilter;
+            const services = getActiveServices(f);
+            count.textContent = services.length + ' service' + (services.length !== 1 ? 's' : '') + ' found';
+            grid.innerHTML = services.map(s => buildServiceCard(s)).join('');
+            attachCardEvents();
+        }
+
+        document.addEventListener('DOMContentLoaded', renderServicesGrid);
+    </script>
+</body>
+
+</html>

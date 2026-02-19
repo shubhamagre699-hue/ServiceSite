@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — BoostKart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div class="admin-login" id="loginScreen">
+        <div class="admin-login-card">
+            <div class="logo" style="justify-content:center;margin-bottom:1.25rem">
+                <span class="logo-icon">⚡</span><span class="logo-text">BoostKart Admin</span>
+            </div>
+            <h1>Admin Login</h1>
+            <p>Enter your password to access the admin dashboard.</p>
+            <div class="form-group" style="text-align:left">
+                <label>Password</label>
+                <input type="password" id="adminPass" placeholder="Enter admin password"
+                    onkeydown="if(event.key==='Enter')tryLogin()">
+            </div>
+            <button class="submit-btn" onclick="tryLogin()">🔐 Login</button>
+            <div class="login-error" id="loginError">❌ Incorrect password. Try again.</div>
+            <p style="font-size:0.72rem;color:var(--text3);margin-top:1rem">Default: admin123 — Change in admin.html JS
+            </p>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <div class="logo"><span class="logo-icon">⚡</span><span class="logo-text">BoostKart Admin</span></div>
+            <div class="admin-nav-tabs">
+                <button class="admin-tab active" onclick="showSection('overview')">📊 Overview</button>
+                <button class="admin-tab" onclick="showSection('orders')">📋 Orders</button>
+                <button class="admin-tab" onclick="showSection('services')">🛍️ Services</button>
+                <button class="admin-tab" onclick="showSection('settings')">⚙️ Settings</button>
+            </div>
+            <button class="admin-logout" onclick="logout()">Logout →</button>
+        </div>
+
+        <div class="admin-content">
+
+            <!-- OVERVIEW -->
+            <div class="admin-section active" id="sec-overview">
+                <h2 class="admin-title">📊 Dashboard Overview</h2>
+                <div class="admin-stats-grid" id="statsGrid"></div>
+                <div
+                    style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+                    <div
+                        style="padding:1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+                        <h3 style="font-size:0.9rem;font-weight:700">Recent Orders (Last 10)</h3>
+                        <button class="table-btn edit" onclick="showSection('orders')">View All</button>
+                    </div>
+                    <div style="overflow-x:auto">
+                        <table class="data-table" id="recentOrdersTable">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Service</th>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORDERS -->
+            <div class="admin-section" id="sec-orders">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+                    <h2 class="admin-title" style="margin:0">📋 All Orders</h2>
+                    <div style="display:flex;gap:0.75rem">
+                        <select id="orderFilter" onchange="renderOrdersTable()"
+                            style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:0.82rem;font-family:Inter,sans-serif;outline:none">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <button class="btn-primary-sm" onclick="exportOrders()">📥 Export CSV</button>
+                    </div>
+                </div>
+                <div
+                    style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto">
+                    <table class="data-table" id="ordersTable">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Service</th>
+                                <th>Username</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>UTR</th>
+                                <th>Phone</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody"></tbody>
+                    </table>
+                </div>
+                <div id="noOrders" style="text-align:center;padding:3rem;color:var(--text3);display:none">
+                    No orders found. Share your website to start receiving orders!
+                </div>
+            </div>
+
+            <!-- SERVICES MANAGEMENT -->
+            <div class="admin-section" id="sec-services">
+                <h2 class="admin-title">🛍️ Manage Services</h2>
+
+                <!-- Add Service Form -->
+                <div class="add-service-form">
+                    <h3>+ Add New Service</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Service Name *</label>
+                            <input type="text" id="newName" placeholder="e.g. 2,000 Followers">
+                        </div>
+                        <div class="form-group">
+                            <label>Platform</label>
+                            <select id="newPlatform">
+                                <option value="instagram">Instagram</option>
+                                <option value="tiktok">TikTok</option>
+                                <option value="youtube">YouTube</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (₹) *</label>
+                            <input type="number" id="newPrice" placeholder="399">
+                        </div>
+                        <div class="form-group">
+                            <label>Original Price (₹)</label>
+                            <input type="number" id="newOrigPrice" placeholder="599">
+                        </div>
+                        <div class="form-group">
+                            <label>Delivery Time *</label>
+                            <input type="text" id="newDelivery" placeholder="24–48 hours">
+                        </div>
+                        <div class="form-group">
+                            <label>Mark as Popular?</label>
+                            <select id="newPopular">
+                                <option value="false">No</option>
+                                <option value="true">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label>Description *</label>
+                            <textarea id="newDesc" placeholder="Brief description of the service"
+                                style="min-height:60px"></textarea>
+                        </div>
+                    </div>
+                    <button class="btn-primary" style="margin-top:0.5rem" onclick="addService()">+ Add Service</button>
+                </div>
+
+                <!-- Services Table -->
+                <div
+                    style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Platform</th>
+                                <th>Price</th>
+                                <th>Delivery</th>
+                                <th>Popular</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="servicesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SETTINGS -->
+            <div class="admin-section" id="sec-settings">
+                <h2 class="admin-title">⚙️ Site Settings</h2>
+                <div
+                    style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;max-width:600px">
+                    <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:1.5rem">Business Configuration</h3>
+                    <div class="form-group">
+                        <label>UPI ID</label>
+                        <input type="text" id="settingUpi" placeholder="yourname@upi">
+                    </div>
+                    <div class="form-group">
+                        <label>UPI Holder Name</label>
+                        <input type="text" id="settingUpiName">
+                    </div>
+                    <div class="form-group">
+                        <label>Telegram Username (without @)</label>
+                        <input type="text" id="settingTg">
+                    </div>
+                    <div class="form-group">
+                        <label>Support Email</label>
+                        <input type="email" id="settingEmail">
+                    </div>
+                    <div class="form-group">
+                        <label>Support Hours</label>
+                        <input type="text" id="settingHours" placeholder="10 AM – 10 PM IST">
+                    </div>
+                    <div class="form-group">
+                        <label>Admin Password</label>
+                        <input type="password" id="settingPass" placeholder="New password">
+                    </div>
+                    <button class="btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+                    <p style="font-size:0.75rem;color:var(--text3);margin-top:1rem">Settings are saved locally. In
+                        production, these should be stored server-side.</p>
+                </div>
+            </div>
+
+        </div><!-- /admin-content -->
+    </div><!-- /admin-panel -->
+
+    <!-- EDIT ORDER MODAL -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <h3>📋 Order Details</h3>
+            <div id="modalContent" style="font-size:0.85rem;line-height:2;color:var(--text2)"></div>
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="markComplete()" id="modalCompleteBtn">✅ Mark as Completed</button>
+                <button class="modal-close" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT SERVICE MODAL -->
+    <div class="modal-overlay" id="editServiceModal">
+        <div class="modal">
+            <h3>✏️ Edit Service</h3>
+            <div class="form-group"><label>Service Name</label><input type="text" id="editName"></div>
+            <div class="form-group"><label>Price (₹)</label><input type="number" id="editPrice"></div>
+            <div class="form-group"><label>Original Price (₹)</label><input type="number" id="editOrig"></div>
+            <div class="form-group"><label>Delivery Time</label><input type="text" id="editDelivery"></div>
+            <div class="form-group"><label>Description</label><textarea id="editDesc"
+                    style="min-height:60px"></textarea></div>
+            <input type="hidden" id="editServiceId">
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="saveServiceEdit()">💾 Save Changes</button>
+                <button class="modal-close"
+                    onclick="document.getElementById('editServiceModal').classList.remove('open')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast" style="display:none"></div>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // ===== ADMIN PASSWORD =====
+        // ⚠️ CHANGE THIS PASSWORD before going live!
+        const ADMIN_PASSWORD = 'admin123';
+        let currentOrderId = null;
+
+        // ===== LOGIN =====
+        function tryLogin() {
+            const pass = document.getElementById('adminPass').value;
+            const saved = localStorage.getItem('bk_admin_pass') || ADMIN_PASSWORD;
+            if (pass === saved) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminPanel').classList.add('visible');
+                initAdmin();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+        function logout() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('adminPanel').classList.remove('visible');
+            document.getElementById('adminPass').value = '';
+        }
+
+        // ===== SECTIONS =====
+        function showSection(id) {
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('sec-' + id).classList.add('active');
+            event.target.classList.add('active');
+            if (id === 'orders') renderOrdersTable();
+            if (id === 'services') renderServicesTable();
+            if (id === 'settings') loadSettings();
+            if (id === 'overview') renderOverview();
+        }
+
+        // ===== ORDERS =====
+        function getOrders() { return JSON.parse(localStorage.getItem('bk_orders') || '[]'); }
+        function saveOrders(orders) { localStorage.setItem('bk_orders', JSON.stringify(orders)); }
+
+        function renderOrdersTable() {
+            const filter = document.getElementById('orderFilter')?.value || 'all';
+            let orders = getOrders();
+            if (filter !== 'all') orders = orders.filter(o => o.status === filter);
+            orders = orders.slice().reverse();
+            const tbody = document.getElementById('ordersTableBody');
+            const noEl = document.getElementById('noOrders');
+            if (orders.length === 0) {
+                tbody.innerHTML = '';
+                if (noEl) noEl.style.display = 'block';
+                return;
+            }
+            if (noEl) noEl.style.display = 'none';
+            tbody.innerHTML = orders.map(o => `
+      <tr>
+        <td><code style="font-size:0.72rem;color:var(--accent2)">${o.id}</code></td>
+        <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${o.service}</td>
+        <td><strong>${o.username}</strong></td>
+        <td>${o.name || '—'}</td>
+        <td>₹${o.price}</td>
+        <td><code style="font-size:0.72rem">${o.ref}</code></td>
+        <td>${o.phone || '—'}</td>
+        <td style="white-space:nowrap;font-size:0.78rem">${o.createdAt}</td>
+        <td><span class="status-badge status-${o.status}">${o.status}</span></td>
+        <td style="white-space:nowrap">
+          <button class="table-btn edit" onclick="viewOrder('${o.id}')">👁 View</button>
+          ${o.status === 'pending' ? `<button class="table-btn complete" onclick="quickComplete('${o.id}')">✅ Done</button>` : ''}
+        </td>
+      </tr>`).join('');
+        }
+
+        function quickComplete(id) {
+            const orders = getOrders();
+            const o = orders.find(x => x.id === id);
+            if (o) { o.status = 'completed'; saveOrders(orders); renderOrdersTable(); renderOverview(); showToast('✅ Order marked as completed!', 'success'); }
+        }
+
+        function viewOrder(id) {
+            const o = getOrders().find(x => x.id === id);
+            if (!o) return;
+            currentOrderId = id;
+            document.getElementById('modalContent').innerHTML = `
+      <div><strong>Order ID:</strong> ${o.id}</div>
+      <div><strong>Service:</strong> ${o.service}</div>
+      <div><strong>Amount:</strong> ₹${o.price}</div>
+      <div><strong>Username/Link:</strong> ${o.username}</div>
+      <div><strong>Post URL:</strong> ${o.postUrl || 'N/A'}</div>
+      <div><strong>Customer Name:</strong> ${o.name}</div>
+      <div><strong>Phone:</strong> ${o.phone || 'N/A'}</div>
+      <div><strong>UTR/Ref:</strong> ${o.ref}</div>
+      <div><strong>Notes:</strong> ${o.notes || 'None'}</div>
+      <div><strong>Date:</strong> ${o.createdAt}</div>
+      <div><strong>Status:</strong> <span class="status-badge status-${o.status}">${o.status}</span></div>`;
+            document.getElementById('modalCompleteBtn').style.display = o.status === 'completed' ? 'none' : 'block';
+            document.getElementById('editModal').classList.add('open');
+        }
+
+        function markComplete() {
+            quickComplete(currentOrderId);
+            closeModal();
+        }
+        function closeModal() { document.getElementById('editModal').classList.remove('open'); }
+
+        // ===== SERVICES ADMIN TABLE =====
+        function getAdminServices() {
+            const saved = localStorage.getItem('bk_services');
+            return saved ? JSON.parse(saved) : SERVICES;
+        }
+        function saveAdminServices(svcs) { localStorage.setItem('bk_services', JSON.stringify(svcs)); }
+
+        function renderServicesTable() {
+            const services = getAdminServices();
+            document.getElementById('servicesTableBody').innerHTML = services.map(s => `
+      <tr>
+        <td><strong>${s.name}</strong></td>
+        <td>${s.emoji || ''} ${s.platform}</td>
+        <td>₹${s.price} <small style="color:var(--text3);text-decoration:line-through">₹${s.originalPrice}</small></td>
+        <td style="font-size:0.8rem;color:var(--text2)">${s.delivery}</td>
+        <td>${s.popular ? '⭐ Yes' : 'No'}</td>
+        <td><span class="status-badge ${s.active ? 'status-active' : 'status-disabled'}">${s.active ? 'Active' : 'Disabled'}</span></td>
+        <td style="white-space:nowrap">
+          <button class="table-btn edit" onclick="openEditService('${s.id}')">✏️ Edit</button>
+          <button class="table-btn delete" onclick="toggleService('${s.id}')">${s.active ? '🔴 Disable' : '🟢 Enable'}</button>
+          <button class="table-btn delete" onclick="deleteService('${s.id}')">🗑</button>
+        </td>
+      </tr>`).join('');
+        }
+
+        function addService() {
+            const name = document.getElementById('newName').value.trim();
+            const price = parseInt(document.getElementById('newPrice').value);
+            const desc = document.getElementById('newDesc').value.trim();
+            const delivery = document.getElementById('newDelivery').value.trim();
+            if (!name || !price || !desc || !delivery) { showToast('Fill all required fields.', 'error'); return; }
+            const platform = document.getElementById('newPlatform').value;
+            const pMap = { instagram: { emoji: '📸', display: 'Instagram' }, tiktok: { emoji: '🎵', display: 'TikTok' }, youtube: { emoji: '▶️', display: 'YouTube' }, custom: { emoji: '🎯', display: 'Any Platform' } };
+            const services = getAdminServices();
+            services.push({
+                id: 'custom-' + Date.now(),
+                category: platform,
+                platform: pMap[platform].display,
+                emoji: pMap[platform].emoji,
+                name, description: desc, delivery,
+                price, originalPrice: parseInt(document.getElementById('newOrigPrice').value) || price,
+                popular: document.getElementById('newPopular').value === 'true',
+                active: true,
+            });
+            saveAdminServices(services);
+            renderServicesTable();
+            showToast('✅ Service added!', 'success');
+            ['newName', 'newPrice', 'newOrigPrice', 'newDelivery', 'newDesc'].forEach(id => document.getElementById(id).value = '');
+        }
+
+        function toggleService(id) {
+            const services = getAdminServices();
+            const s = services.find(x => x.id === id);
+            if (s) { s.active = !s.active; saveAdminServices(services); renderServicesTable(); showToast(`Service ${s.active ? 'enabled' : 'disabled'}.`, 'success'); }
+        }
+        function deleteService(id) {
+            if (!confirm('Delete this service?')) return;
+            const services = getAdminServices().filter(x => x.id !== id);
+            saveAdminServices(services); renderServicesTable(); showToast('Service deleted.', 'success');
+        }
+        function openEditService(id) {
+            const s = getAdminServices().find(x => x.id === id);
+            if (!s) return;
+            document.getElementById('editServiceId').value = id;
+            document.getElementById('editName').value = s.name;
+            document.getElementById('editPrice').value = s.price;
+            document.getElementById('editOrig').value = s.originalPrice;
+            document.getElementById('editDelivery').value = s.delivery;
+            document.getElementById('editDesc').value = s.description;
+            document.getElementById('editServiceModal').classList.add('open');
+        }
+        function saveServiceEdit() {
+            const id = document.getElementById('editServiceId').value;
+            const services = getAdminServices();
+            const s = services.find(x => x.id === id);
+            if (!s) return;
+            s.name = document.getElementById('editName').value;
+            s.price = parseInt(document.getElementById('editPrice').value);
+            s.originalPrice = parseInt(document.getElementById('editOrig').value);
+            s.delivery = document.getElementById('editDelivery').value;
+            s.description = document.getElementById('editDesc').value;
+            saveAdminServices(services);
+            renderServicesTable();
+            document.getElementById('editServiceModal').classList.remove('open');
+            showToast('✅ Service updated!', 'success');
+        }
+
+        // ===== OVERVIEW =====
+        function renderOverview() {
+            const orders = getOrders();
+            const pending = orders.filter(o => o.status === 'pending').length;
+            const completed = orders.filter(o => o.status === 'completed').length;
+            const revenue = orders.filter(o => o.status === 'completed').reduce((s, o) => s + (o.price || 0), 0);
+            document.getElementById('statsGrid').innerHTML = [
+                { label: 'Total Orders', value: orders.length, icon: '📋' },
+                { label: 'Pending', value: pending, icon: '⏳' },
+                { label: 'Completed', value: completed, icon: '✅' },
+                { label: 'Revenue (₹)', value: '₹' + revenue.toLocaleString('en-IN'), icon: '💰' },
+            ].map(s => `<div class="admin-stat"><div style="font-size:1.5rem;margin-bottom:0.5rem">${s.icon}</div><div class="admin-stat-value">${s.value}</div><div class="admin-stat-label">${s.label}</div></div>`).join('');
+            // Recent orders
+            const recent = orders.slice(-10).reverse();
+            document.getElementById('recentOrdersBody').innerHTML = recent.length
+                ? recent.map(o => `<tr><td><code style="font-size:0.72rem;color:var(--accent2)">${o.id}</code></td><td>${o.service}</td><td>${o.name || '—'}</td><td>₹${o.price}</td><td style="font-size:0.8rem">${o.createdAt}</td><td><span class="status-badge status-${o.status}">${o.status}</span></td></tr>`).join('')
+                : `<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:2rem">No orders yet. Share your website!</td></tr>`;
+        }
+
+        // ===== SETTINGS =====
+        function loadSettings() {
+            document.getElementById('settingUpi').value = localStorage.getItem('bk_upi') || SITE_CONFIG.upiId;
+            document.getElementById('settingUpiName').value = localStorage.getItem('bk_upiname') || SITE_CONFIG.upiName;
+            document.getElementById('settingTg').value = localStorage.getItem('bk_tg') || SITE_CONFIG.telegramUsername;
+            document.getElementById('settingEmail').value = localStorage.getItem('bk_email') || SITE_CONFIG.email;
+            document.getElementById('settingHours').value = localStorage.getItem('bk_hours') || SITE_CONFIG.supportHours;
+        }
+        function saveSettings() {
+            localStorage.setItem('bk_upi', document.getElementById('settingUpi').value);
+            localStorage.setItem('bk_upiname', document.getElementById('settingUpiName').value);
+            localStorage.setItem('bk_tg', document.getElementById('settingTg').value);
+            localStorage.setItem('bk_email', document.getElementById('settingEmail').value);
+            localStorage.setItem('bk_hours', document.getElementById('settingHours').value);
+            const np = document.getElementById('settingPass').value;
+            if (np) { localStorage.setItem('bk_admin_pass', np); document.getElementById('settingPass').value = ''; }
+            showToast('✅ Settings saved!', 'success');
+        }
+
+        // ===== EXPORT CSV =====
+        function exportOrders() {
+            const orders = getOrders();
+            if (!orders.length) { showToast('No orders to export.', 'error'); return; }
+            const h = ['Order ID', 'Service', 'Username', 'Customer Name', 'Phone', 'Amount', 'UTR Ref', 'Post URL', 'Notes', 'Status', 'Date'];
+            const rows = orders.map(o => [o.id, o.service, o.username, o.name || '', o.phone || '', o.price, o.ref, o.postUrl || '', o.notes || '', o.status, o.createdAt].map(v => '"' + String(v || '').replace(/"/g, '""') + '"').join(','));
+            const csv = [h.join(','), ...rows].join('\n');
+            const a = document.createElement('a');
+            a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+            a.download = 'bookkart_orders_' + new Date().toISOString().split('T')[0] + '.csv';
+            a.click();
+            showToast('📊 Orders exported!', 'success');
+        }
+
+        function exportBtn() { exportOrders(); }
+
+        // ===== BTN PRIMARY SM (missing from CSS) =====
+        document.querySelectorAll('.btn-primary-sm').forEach(b => {
+            b.style.cssText += 'padding:8px 16px;background:var(--grad);border:none;border-radius:8px;color:#fff;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif';
+        });
+
+        function initAdmin() { renderOverview(); }
+    </script>
+</body>
+
+</html>
